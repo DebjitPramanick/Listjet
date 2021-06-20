@@ -12,7 +12,7 @@ class Query(graphene.ObjectType):
     def resolve(self, info, id=None):
         if id:
             return ListItem.objects.filter(id = id)
-        return ListItem.objects.all()
+        return ListItem.objects.all().order_by("-id")
 
 class CreateItem(graphene.Mutation):
     item = graphene.Field(ItemType)
