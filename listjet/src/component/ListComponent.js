@@ -16,6 +16,9 @@ import {
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade, makeStyles } from '@material-ui/core/styles';
+import { useAuth0 } from "@auth0/auth0-react";
+import LockImage from "../assets/login.png"
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -80,6 +83,10 @@ const useStyles = makeStyles((theme) => ({
         height: "20px",
         borderRadius: "50%",
         cursor: "pointer"
+    },
+    img: {
+        width: '200px',
+        marginTop : '50px'
     }
 }));
 
@@ -103,6 +110,8 @@ const ListComponent = () => {
     const [query, setQuery] = useState('')
 
     const createTask = () => { createItem({ variables: { title: 'New Task' }, refetchQueries: [{ query: GET_ITEMS }] }) }
+
+    const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0();
 
     if (loading) {
         return <p>Loading...</p>
@@ -145,29 +154,41 @@ const ListComponent = () => {
                                 ))}
 
                             </div>
-                            <Button color="inherit">Login</Button>
+                            {!isAuthenticated ? (
+                                <Button color="inherit" onClick={() => loginWithRedirect()}>Login</Button>
+                            ) : (
+                                <Button color="inherit" onClick={() => logout({ returnTo: window.location.origin })}>Logout</Button>
+                            )}
                         </Toolbar>
                     </AppBar>
-                    <Box component="div" stytle={{
-                        maxWidth: "500px",
-                        margin: "0 auto"
-                    }}>
-                        <List>
-                            {dataList.length > 0 ? dataList.map((item, i) => (
-                                <ItemComponent item={item} i={i} color={color} />
-                            )) : (
-                                <Typography>No Task</Typography>
-                            )}
-                        </List>
-                        {
-                            query === '' && 
-                            <Button variant="outlined" fullWidth onClick={createTask}>
-                            <IconButton style={{ padding: 2 }}>
-                                <AddCircleOutlineIcon style={{ color: color }} />
-                            </IconButton>
-                        </Button>
-                        }
+
+                    {isAuthenticated ? (
+                        <Box component="div" stytle={{
+                            maxWidth: "500px",
+                            margin: "0 auto"
+                        }}>
+                            <Typography variant="h5" style={{textAlign: 'left', fontWeight: 'bold', margin: '10px 0'}}>Welcome {user.name}!</Typography>
+                            <List>
+                                {dataList.length > 0 ? dataList.map((item, i) => (
+                                    <ItemComponent item={item} i={i} color={color} />
+                                )) : (
+                                    <Typography>No Task</Typography>
+                                )}
+                            </List>
+                            {
+                                query === '' &&
+                                <Button variant="outlined" fullWidth onClick={createTask}>
+                                    <IconButton style={{ padding: 2 }}>
+                                        <AddCircleOutlineIcon style={{ color: color }} />
+                                    </IconButton>
+                                </Button>
+                            }
+                        </Box>
+                    ) : 
+                    <Box>
+                        <img className={classes.img} src={LockImage} alt=""/>
                     </Box>
+                    }
                 </Container>
             </div>
         )

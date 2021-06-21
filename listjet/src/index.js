@@ -7,18 +7,29 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 const client = new ApolloClient({
   uri: 'http://127.0.0.1:8000/graphql/',
   cache: new InMemoryCache()
 });
 
+console.log(process.env.REACT_APP_AUTH0_CLIENT_ID)
+
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </ApolloProvider>,
+  <Auth0Provider
+    domain={process.env.REACT_APP_AUTH0_DOMAIN}
+    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+    redirectUri={window.location.origin}
+    useRefreshTokens
+    cacheLocation="localstorage"
+  >
+    <ApolloProvider client={client}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </ApolloProvider>
+  </Auth0Provider>,
   document.getElementById('root')
 );
 

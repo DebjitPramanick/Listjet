@@ -35,7 +35,6 @@ class UpdateItem(graphene.Mutation):
         item.save()
         return UpdateItem(item=item)
 
-
 class DeleteItem(graphene.Mutation):
     message = graphene.String()
     class Arguments:
@@ -44,7 +43,6 @@ class DeleteItem(graphene.Mutation):
         item = ListItem.objects.get(id=id)
         item.delete()
         return DeleteItem(message= "Item deleted.")
-
 
 class Mutation(graphene.ObjectType):
     createItem = CreateItem.Field()
