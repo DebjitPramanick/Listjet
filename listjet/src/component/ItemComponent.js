@@ -27,7 +27,7 @@ const ItemComponent = ({item, color, i}) => {
     const deleteTask = (id) => { deleteItem({ variables: { id: id }, refetchQueries: [{ query: GET_ITEMS }] }) }
     const updateTask = (id) => {
         if (title !== '') {
-            updateItem({ variables: { id: 26, title: title }, refetchQueries: [{ query: GET_ITEMS }] })
+            updateItem({ variables: { id: id, title: title }, refetchQueries: [{ query: GET_ITEMS }] })
             setUpdate(false)
         }
     }
