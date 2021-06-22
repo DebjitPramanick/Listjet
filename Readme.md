@@ -1,5 +1,6 @@
 ### Listjet - Make Your List
 
+
 - Initialization
 1. Create React App
 2. Install Django GraphQL
